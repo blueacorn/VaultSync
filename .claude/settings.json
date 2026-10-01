@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xcodebuild -project VaultSync.xcodeproj *)"
+    ]
+  },
+  "showClearContextOnPlanAccept": true,
+  "plansDirectory": "./claude/plans",
+  "autoMemoryEnabled": true,
+  "inputNeededNotifEnabled": true,
+  "agentPushNotifEnabled": true
+}

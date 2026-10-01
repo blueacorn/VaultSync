@@ -1,0 +1,29 @@
+//
+// Application.xcconfig
+//
+// Signing and identifier configuration shared by every target. To build your own copy,
+// set DEVELOPMENT_TEAM and BUNDLE_ID_PREFIX; every bundle identifier, the App Group,
+// the keychain access group and the OAuth redirect scheme derive from them.
+//
+
+// Apple Developer team used for signing.
+DEVELOPMENT_TEAM = __UNSET__
+
+// Unique App Identifier (e.g. com.example).
+BUNDLE_ID_PREFIX = org.vaultsync
+
+// Azure / Entra application (client) ID for the OneDrive Personal backend.
+// Public client (no secret). Register at https://entra.microsoft.com with
+// redirect URI $(OAUTH_REDIRECT_SCHEME)://auth and "Personal Microsoft accounts".
+// Surfaced to runtime via Info.plist key MSGraphClientID = $(MSGRAPH_CLIENT_ID).
+MSGRAPH_CLIENT_ID = b8553f8a-a0a7-4714-b971-b071bb0ba293
+
+// Optional per-developer overrides (gitignored).
+// May redefine DEVELOPMENT_TEAM and MSGRAPH_CLIENT_ID; values above apply when absent.
+#include? "Local.xcconfig"
+
+// Derived identifiers — normally left unchanged.
+APP_BUNDLE_ID = $(BUNDLE_ID_PREFIX).VaultSync
+APP_GROUP_ID = group.$(APP_BUNDLE_ID)
+OAUTH_REDIRECT_SCHEME = $(APP_BUNDLE_ID:lower)
+

@@ -1,0 +1,2362 @@
+metadata:
+  lastUpdated: 2026-09-29
+  purpose: Quick reference for all editable source files with metadata for efficient navigation and change detection
+  indexStructure:
+    - path: Relative path from project root
+    - purpose: File's primary responsibility
+    - target: Framework or app target ID
+    - classes: Public classes and structs defined
+    - protocols: Protocols and extensions
+    - keyFunctions: Primary public functions/methods
+    - interfaces: Services or protocols this file implements
+
+targets:
+  - id: extension
+    name: Extension Framework
+    description: File Provider implementation (NSFileProviderReplicatedExtension)
+    type: framework
+    module: Extension.framework
+
+  - id: common
+    name: Common Framework
+    description: Shared utilities, services, and protocols
+    type: framework
+    module: Common.framework
+
+  - id: server
+    name: Server Framework
+    description: Backend service logic (runs in main app, not extension)
+    type: framework
+    module: Server.framework
+
+  - id: vaultsync
+    name: VaultSync App
+    description: Main macOS application UI and management
+    type: application
+
+  - id: action
+    name: File Provider Action Extension
+    description: Custom actions UI (NSExtensionFileProviderActions)
+    type: extension
+
+  - id: provider
+    name: File Provider Entry Point
+    description: File Provider extension entry point
+    type: extension
+    module: Provider.appex
+
+files:
+  # Extension Framework - Provider
+  - path: Extension/Provider/Extension.swift
+    target: extension
+    purpose: Core NSFileProviderReplicatedExtension implementation
+    module: Extension.framework
+    checksum: 274e0c87
+    mtime: 1790695513
+    classes:
+      - Extension
+    extensions:
+      - Extension
+
+  - path: Extension/Provider/Extension+FetchContent.swift
+    target: extension
+    purpose: Full file content fetching for the file provider extension.
+    module: Extension.framework
+    checksum: a4feb996
+    mtime: 1790574773
+    extensions:
+      - Extension
+
+  - path: Extension/Provider/Extension+FetchPartialContent.swift
+    target: extension
+    purpose: Byte-range materialisation (BRM) for the file provider extension.
+    module: Extension.framework
+    checksum: a5084ccd
+    mtime: 1790460018
+    extensions:
+      - Extension
+
+  - path: Extension/Provider/Extension+Thumbnailing.swift
+    target: extension
+    purpose: Quick Look thumbnail generation
+    module: Extension.framework
+    checksum: b1ee5cf5
+    mtime: 1790460018
+    extensions:
+      - Extension
+
+  - path: Extension/Provider/Extension+CustomAction.swift
+    target: extension
+    purpose: Custom actions (Pin, Unpin, Heart, Share)
+    module: Extension.framework
+    checksum: b2b832c9
+    mtime: 1790641444
+    extensions:
+      - NSFileProviderExtensionActionIdentifier
+      - Extension
+
+  - path: Extension/Provider/ContentEncryptionConverter.swift
+    target: extension
+    purpose: "Safe file-to-file conversion primitive: encrypt, decrypt, or copy an existing backend file"
+    module: Extension.framework
+    checksum: 6b1213f6
+    mtime: 1790390796
+    classes:
+      - ContentEncryptionConverterError
+      - RemoveOriginalPolicy
+      - ContentEncryptionConverter
+
+  - path: Extension/Provider/EncryptionProgressReporter.swift
+    target: extension
+    purpose: Drives a Finder-visible progress indicator for a bulk encrypt/decrypt action.
+    module: Extension.framework
+    checksum: c2812bf5
+    mtime: 1783294770
+    classes:
+      - EncryptionProgressReporter
+    protocols:
+      - EncryptionProgressReporting
+
+  - path: Extension/Provider/SignalThrottle.swift
+    target: extension
+    purpose: Coalesces rapid enumerator-signal requests for a File Provider domain.
+    module: Extension.framework
+    checksum: 12c379b2
+    mtime: 1783301493
+    classes:
+      - SignalThrottle
+
+  - path: Extension/Provider/Extension+EncryptionAction.swift
+    target: extension
+    purpose: "Finder context-menu encryption actions: \"Encrypt File(s)\", \"Create Encrypted Copy\", and"
+    module: Extension.framework
+    checksum: 52edb698
+    mtime: 1790396195
+    extensions:
+      - Extension
+
+  - path: Extension/Provider/Extension+DomainState.swift
+    target: extension
+    purpose: Domain lifecycle and state management
+    module: Extension.framework
+    checksum: 24607d44
+    mtime: 1790460018
+    extensions:
+      - Extension
+
+  - path: Extension/Provider/Extension+Servicing.swift
+    target: extension
+    purpose: Background sync and servicing requests
+    module: Extension.framework
+    checksum: bec0d585
+    mtime: 1790641388
+    classes:
+      - VaultSyncServiceSource
+    extensions:
+      - Extension
+      - DomainService
+
+  - path: Extension/Provider/Extension+Suppressing.swift
+    target: extension
+    purpose: Process suppression logic (prevent materialization)
+    module: Extension.framework
+    checksum: 91934c6b
+    mtime: 1779613273
+    extensions:
+      - Extension (suppressing)
+    keyFunctions:
+      - isProcessSuppressed()
+      - suppressedProcesses()
+    interfaces:
+      - NSFileProviderExtensionNonMaterializingProcessNames
+
+  # Extension Framework - Items
+  - path: Extension/Items/Enumerator.swift
+    target: extension
+    purpose: NSFileProviderEnumerator implementation for directory listing
+    module: Extension.framework
+    checksum: 729226bd
+    mtime: 1790695513
+    classes:
+      - ItemEnumerator
+      - WorkingSetEnumerator
+      - TrashEnumerator
+    extensions:
+      - DomainService
+      - NSFileProviderSyncAnchor
+      - NSFileProviderPage
+
+  - path: Extension/Items/Item.swift
+    target: extension
+    purpose: NSFileProviderItem wrapper for server responses
+    module: Extension.framework
+    checksum: a1e91786
+    mtime: 1790695513
+    classes:
+      - Item
+    protocols:
+      - XAttrGettable
+    extensions:
+      - String
+      - Bool
+      - NSFileProviderItemIdentifier
+      - DomainService
+
+  # Extension Framework - Errors / Polling
+  - path: Extension/Errors/Error+Presentable.swift
+    target: extension
+    purpose: Error formatting and presentation
+    module: Extension.framework
+    checksum: 72744f64
+    mtime: 1788582518
+    extensions:
+      - Error
+
+  - path: Extension/Polling/DeltaPoller.swift
+    target: extension
+    purpose: Periodic background change-detection for a single File Provider domain.
+    module: Extension.framework
+    checksum: a97e8b71
+    mtime: 1788834842
+
+  # Extension Framework - Backend
+  - path: Extension/Backend/ProviderBackend.swift
+    target: extension
+    purpose: The pluggable backend seam for the File Provider extension.
+    module: Extension.framework
+    checksum: 1526139c
+    mtime: 1790469136
+    classes:
+      - DeltaPollResult
+      - DeltaProgress
+    protocols:
+      - ProviderBackend
+
+  - path: Extension/Backend/BackendFactory.swift
+    target: extension
+    purpose: Resolves a domain's ``BackendKind`` to a concrete ``ProviderBackend``.
+    module: Extension.framework
+    checksum: 76625f69
+    mtime: 1788571159
+    classes:
+      - BackendFactory
+
+  - path: Extension/Backend/ContentStreamDownloader.swift
+    target: extension
+    purpose: Backend-neutral streaming content download + decrypt with offset writes.
+    module: Extension.framework
+    checksum: 5794927f
+    mtime: 1790469126
+    classes:
+      - ContentStreamError
+      - ContentStreamDownloader
+      - Result
+      - ResolvedHeader
+      - HeaderOutcome
+      - BC01Plan
+    protocols:
+      - ContentFetching
+    extensions:
+      - ContentFetching
+
+  - path: Extension/Backend/CryptoProgressReporter.swift
+    target: extension
+    purpose: Narrow observer seam for reporting encrypt/decrypt progress to the app (task 28).
+    module: Extension.framework
+    checksum: 7fb4676c
+    mtime: 1783481896
+    classes:
+      - NoOpCryptoProgressReporter
+      - ProgressStoreCryptoReporter
+    protocols:
+      - CryptoProgressReporter
+
+  - path: Extension/Backend/StreamingDownload.swift
+    target: extension
+    purpose: Shared backend wiring for ``ContentStreamDownloader``-based `downloadToFile`.
+    module: Extension.framework
+    checksum: 7e4c3174
+    mtime: 1790695513
+    classes:
+      - StreamingDownload
+      - ProgressSampler
+
+  - path: Extension/Backend/BC01HeaderCache.swift
+    target: extension
+    purpose: Persistent, per-domain cache of parsed BC01 file headers.
+    module: Extension.framework
+    checksum: fd66e6bb
+    mtime: 1790695513
+    classes:
+      - CachedHeader
+      - BC01HeaderCacheError
+      - BC01HeaderCache
+
+  - path: Extension/Backend/Emulator/ServerEmulatorClient.swift
+    target: extension
+    purpose: IPC/RPC client for HTTP communication with main app
+    module: Extension.framework
+    checksum: e9fd4cbe
+    mtime: 1790695513
+    classes:
+      - ServerEmulatorClient
+      - EmulatorContentFetcher
+      - EmulatorContentPutter
+      - ResponseBox
+    extensions:
+      - ServerEmulatorClient
+
+  - path: Extension/Backend/OneDrive/GraphDriveClient.swift
+    target: extension
+    purpose: "``ProviderBackend`` implementation over the Microsoft Graph DriveItem API for"
+    module: Extension.framework
+    checksum: 7c4877f0
+    mtime: 1790695513
+    classes:
+      - GraphDriveClient
+      - GraphContentPutter
+      - Target
+      - GraphContentFetcher
+    protocols:
+      - GraphUploadTransport
+    extensions:
+      - GraphDriveClient
+
+  - path: Extension/Backend/OneDrive/GraphDeltaSync.swift
+    target: extension
+    purpose: Durable, resumable change monitoring for a OneDrive drive via the Graph delta API.
+    module: Extension.framework
+    checksum: ab9a5e62
+    mtime: 1790695513
+    classes:
+      - DeltaResult
+      - DeltaPageUpdate
+      - DeltaHTTPError
+
+  - path: Extension/Backend/OneDrive/GraphMapping.swift
+    target: extension
+    purpose: Microsoft Graph `driveItem` model and its mapping to the VaultSync
+    module: Extension.framework
+    checksum: 5dd92024
+    mtime: 1790641388
+    classes:
+      - GraphMapping
+
+  - path: Extension/Backend/OneDrive/GraphRateLimiter.swift
+    target: extension
+    purpose: Per-client throttling for Microsoft Graph requests.
+    module: Extension.framework
+    checksum: 624cfedb
+    mtime: 1790558352
+    classes:
+      - Priority
+
+  - path: Extension/Backend/OneDrive/MetadataCache.swift
+    target: extension
+    purpose: Metadata-only mirror of the OneDrive sub-tree, persisted as SQLite in the App Group
+    module: Extension.framework
+    checksum: 9337bfb8
+    mtime: 1790695513
+    classes:
+      - CachedItem
+      - LocalMetadata
+      - LifecycleState
+      - MetadataCacheError
+      - MetadataCache
+      - MetaTransaction
+    extensions:
+      - CachedItem
+
+  - path: Extension/Backend/BackendResourceCleanup.swift
+    target: extension
+    purpose: Shared entry point for tearing down a domain's on-disk resources, with backend routing.
+    module: Extension.framework
+    checksum: c2b4e4ae
+    mtime: 1788541216
+    classes:
+      - BackendResourceCleanup
+
+  - path: Extension/Backend/OneDrive/DomainVersionStore.swift
+    target: extension
+    purpose: Derives the extension-owned NSFileProviderDomainVersion for a OneDrive domain.
+    module: Extension.framework
+    checksum: f2e178bd
+    mtime: 1782717733
+    classes:
+      - DomainVersionStore
+      - Key
+
+  # Common Framework - Service
+  - path: Common/Service/DomainService.swift
+    target: common
+    purpose: RPC protocol definitions for all File Provider operations
+    module: Common.framework
+    checksum: ca1b73b6
+    mtime: 1790695513
+    classes:
+      - JSONMethod
+      - DomainService
+      - EntryType
+      - Version
+      - ConflictVersion
+      - RankToken
+      - ItemIdentifier
+      - CodingKeys
+      - EntryMetadata
+      - ValidEntries
+      - ExtendedAttributes
+      - Entry
+      - UserInfo
+      - ContentStorageType
+      - ListFolderParameter
+      - PageCursor
+      - ListFolderReturn
+      - ListChangesParameter
+      - ListChangesReturn
+      - LatestRankParameter
+      - LatestRankReturn
+      - CreateParameter
+      - ConflictStrategy
+      - CreateReturn
+      - ModifyContentsParameter
+      - ModifyContentsReturn
+      - ModifyMetadataParameter
+      - ModifyMetadataReturn
+      - FetchItemParameter
+      - FetchItemReturn
+      - DownloadItemParameter
+      - DownloadItemReturn
+      - DownloadToFileReturn
+      - PlaintextWindow
+      - DeleteItemParameter
+      - DeleteItemReturn
+      - TrashItemParameter
+      - TrashItemReturn
+      - RestoreItemParameter
+      - RestoreItemReturn
+      - UpdateThumbnailParameter
+      - UpdateThumbnailReturn
+      - FetchThumbnailParameter
+      - FetchThumbnailReturn
+      - ConflictVersionsParameter
+      - ConflictVersionsReturn
+      - ResolveConflictVersionsParameter
+      - ResolveConflictVersionsReturn
+      - CreateConflictParameter
+      - CreateConflictReturn
+      - MarkParameter
+      - MarkReturn
+      - PingLockParameter
+      - PingLockReturn
+      - RemoveLockParameter
+      - RemoveLockReturn
+      - ForceLockParameter
+      - ForceLockReturn
+      - PushRegistrationParameter
+      - PushRegistrationReturn
+      - PushDevice
+      - SimulatedError
+      - AccessType
+      - SimulateErrorParameter
+      - SimulateErrorReturn
+      - SimulateErrorListParameter
+      - SimulateErrorListReturn
+      - ListLocksParameter
+      - ListLocksReturn
+      - Lock
+    protocols:
+      - JSONParameter
+    extensions:
+      - NSFileProviderFileSystemFlags
+      - DomainService
+
+  # Common Framework - Provisioning
+  - path: Common/Provisioning/DomainProvisioningService.swift
+    target: common
+    purpose: Protocol for backend-agnostic domain provisioning.
+    module: Common.framework
+    checksum: 9f58f8d6
+    mtime: 1781161689
+    protocols:
+      - DomainProvisioningService
+
+  - path: Common/Provisioning/NoOp/NoOpProvisioningService.swift
+    target: common
+    purpose: Placeholder DomainProvisioningService that does nothing.
+    module: Common.framework
+    checksum: 17b32ff4
+    mtime: 1781161690
+    classes:
+      - NoOpProvisioningService
+
+  - path: Common/Provisioning/DomainDeprovisioningService.swift
+    target: common
+    purpose: Protocol for backend-agnostic full resource teardown on domain deletion.
+    module: Common.framework
+    checksum: 921b8675
+    mtime: 1788674462
+    classes:
+      - DomainDeprovisioningError
+    protocols:
+      - DomainDeprovisioningService
+
+  - path: Common/Provisioning/DefaultDomainDeprovisioningService.swift
+    target: common
+    purpose: Composite ``DomainDeprovisioningService`` that runs an ordered list of cleanup steps.
+    module: Common.framework
+    checksum: "96638533"
+    mtime: 1788586358
+    classes:
+      - DomainCleanupStep
+      - DefaultDomainDeprovisioningService
+
+  - path: Common/Provisioning/BackendResourceCleaning.swift
+    target: common
+    purpose: Per-backend on-disk teardown, routed by ``BackendKind``.
+    module: Common.framework
+    checksum: e3d9cd7f
+    mtime: 1788205247
+    protocols:
+      - BackendResourceCleaning
+
+  - path: Common/Provisioning/NoOp/NoOpDeprovisioningService.swift
+    target: common
+    purpose: Placeholder ``DomainDeprovisioningService`` that does nothing.
+    module: Common.framework
+    checksum: 3b350d4f
+    mtime: 1788069804
+    classes:
+      - NoOpDeprovisioningService
+
+  # Common Framework - Config
+  - path: Common/Config/SharedConfig.swift
+    target: common
+    purpose: Cross-process shared configuration schema persisted as JSON in the App Group container.
+    module: Common.framework
+    checksum: "165633e1"
+    mtime: 1790695513
+    classes:
+      - BackendKind
+      - DomainAccount
+      - SharedConfig
+      - VaultGating
+      - VaultLockMethod
+    extensions:
+      - SharedConfig
+
+  - path: Common/Config/ConfigStore.swift
+    target: common
+    purpose: Storage-layer abstraction for the cross-process SharedConfig document.
+    module: Common.framework
+    checksum: 3b2bfef5
+    mtime: 1781487806
+    protocols:
+      - ConfigStore
+
+  - path: Common/Config/SharedConfigStore.swift
+    target: common
+    purpose: Cross-process store for ``SharedConfig`` backed by a JSON file in the App Group container.
+    module: Common.framework
+    checksum: 57d2667c
+    mtime: 1790695513
+    classes:
+      - SharedConfigStore
+    extensions:
+      - SharedConfigStore
+
+  - path: Common/Config/Defaults.swift
+    target: common
+    purpose: UserDefaults configuration and feature flags.
+    module: Common.framework
+    checksum: e3a04747
+    mtime: 1790641444
+    classes:
+      - FeatureFlag
+      - FeatureFlags
+      - ErrorType
+      - Holder
+
+  - path: Common/Config/ProgressStore.swift
+    target: common
+    purpose: "Cross-process progress relay: Provider → App (see `docs/tasks/28-progress-update.md`)."
+    module: Common.framework
+    checksum: 61903a68
+    mtime: 1790695513
+    classes:
+      - CryptoOp
+      - Direction
+      - ProviderState
+      - ProgressSnapshot
+      - ProgressStore
+
+  - path: Common/Auth/MSALTokenStore.swift
+    target: common
+    purpose: Hand-rolled OAuth 2.0 token store for the Microsoft identity platform.
+    module: Common.framework
+    checksum: a93f4dc4
+    mtime: 1790695513
+    classes:
+      - OAuthConfig
+      - PKCE
+      - TokenResponse
+      - CodingKeys
+      - CachedAccessToken
+      - AuthError
+      - VaultRefreshTokenStore
+    protocols:
+      - RefreshTokenStoring
+
+  - path: Common/OneDrive/GraphModels.swift
+    target: common
+    purpose: Microsoft Graph `driveItem` wire models, shared between the container app's
+    module: Common.framework
+    checksum: 9275aec4
+    mtime: 1788064420
+    classes:
+      - GraphDriveItem
+      - ParentReference
+      - FileFacet
+      - Hashes
+      - FolderFacet
+      - DeletedFacet
+      - SpecialFolderFacet
+      - RemoteItemFacet
+      - GraphCollection
+      - CodingKeys
+      - GraphUploadSession
+      - GraphDecoding
+
+  # Common Framework - Core
+  - path: Common/Core/Errors.swift
+    target: common
+    purpose: Shared error types and definitions
+    module: Common.framework
+    checksum: cc37fafa
+    mtime: 1779610765
+    classes:
+      - CommonError
+      - Values
+      - CodingKeys
+    protocols:
+      - Error
+      - Codable
+    interfaces:
+      - Standard error handling across all targets
+
+  - path: Common/Core/FileProviderHelpers.swift
+    target: common
+    purpose: NSFileProvider utility functions and conversions
+    module: Common.framework
+    checksum: af6824ce
+    mtime: 1787460606
+    extensions:
+      - Data
+      - NSFileProviderItemVersion
+      - NSFileProviderTypeAndCreator
+      - DomainService
+      - CommonError
+      - Error
+
+  # Common Framework - Crypto
+  - path: Common/Crypto/Boxcryptor/BC01CryptoCommon.swift
+    target: common
+    purpose: "Shared BC01 crypto primitives: constants, error types, header model, and low-level helpers."
+    module: Common.framework
+    checksum: 36c3da9b
+    mtime: 1790695513
+    classes:
+      - BC01Error
+      - BC01HeaderHMACStatus
+      - BC01HeaderHMACPolicy
+      - BCFileHeader
+      - Cipher
+      - MAC
+      - Metadata
+      - Name
+      - EncryptedKey
+      - BC01Header
+      - BC01CryptoCommon
+
+  - path: Common/Crypto/Boxcryptor/BC01Decryptor.swift
+    target: common
+    purpose: "Boxcryptor BC01 file decryption: Phase 2 (RSA-OAEP file key) + Phase 3 (AES-256-CBC blocks)."
+    module: Common.framework
+    checksum: 902a5521
+    mtime: 1790552938
+    classes:
+      - BC01Decryptor
+
+  - path: Common/Crypto/Boxcryptor/BC01Encryptor.swift
+    target: common
+    purpose: "Boxcryptor BC01 file encryption: RSA-OAEP-SHA1 file key wrap + AES-256-CBC block encrypt."
+    module: Common.framework
+    checksum: fd134924
+    mtime: 1790552950
+    classes:
+      - BC01Encryptor
+      - BC01EncryptionSession
+
+  - path: Common/Crypto/Boxcryptor/BC01LanePartition.swift
+    target: common
+    purpose: Block-aligned ciphertext partitioning for parallel BC01 range downloads.
+    module: Common.framework
+    checksum: ec04c870
+    mtime: 1788150257
+    classes:
+      - BC01LanePartition
+      - Span
+
+  - path: Common/Crypto/CryptoConfig.swift
+    target: common
+    purpose: Encryption algorithm selection and per-domain crypto configuration.
+    module: Common.framework
+    checksum: eba51849
+    mtime: 1790563511
+    classes:
+      - CryptoAlgorithm
+      - DomainCryptoConfig
+    extensions:
+      - DomainCryptoConfig
+
+  - path: Common/Crypto/CryptoConfigViewModel.swift
+    target: common
+    purpose: "Phase 1 BC01 key derivation: PBKDF2-SHA512 + HMAC-SHA256 verification + AES-256-CBC decrypt → RSA DER."
+    module: Common.framework
+    checksum: "85e14242"
+    mtime: 1788639695
+    classes:
+      - BCKeyFile
+      - User
+      - CryptoConfigError
+      - DerivedKeyMaterial
+      - CryptoConfigViewModel
+
+  - path: Common/Crypto/CryptoKeychain.swift
+    target: common
+    purpose: App Group keychain storage for the vault's key material (task 51).
+    module: Common.framework
+    checksum: 86dfac8f
+    mtime: 1790695513
+    classes:
+      - CryptoKeychain
+      - ServiceNamespace
+      - KeychainError
+
+  - path: Common/Crypto/FileDecryptor.swift
+    target: common
+    purpose: Protocol for file decryption with in-memory, streaming, and block-range support.
+    module: Common.framework
+    checksum: 4ffcd214
+    mtime: 1779610765
+    classes:
+      - PlainFileDecryptor
+    protocols:
+      - FileDecryptor
+
+  - path: Common/Crypto/FileEncryptor.swift
+    target: common
+    purpose: Protocol for file encryption with in-memory and streaming support.
+    module: Common.framework
+    checksum: 7aaf584e
+    mtime: 1790384310
+    classes:
+      - PlainEncryptionSession
+      - PlainFileEncryptor
+    protocols:
+      - FileEncryptionSession
+      - FileEncryptor
+
+  - path: Common/Crypto/LABiometricGate.swift
+    target: common
+    purpose: "LocalAuthentication-backed ``BiometricGate`` (device owner auth: Touch ID / passcode)."
+    module: Common.framework
+    checksum: f5b1ea42
+    mtime: 1788650688
+    classes:
+      - LABiometricGate
+
+  - path: Common/Core/Logger+Public.swift
+    target: common
+    purpose: Logger extension for unredacted output in sandboxed processes.
+    module: Common.framework
+    checksum: 9249f425
+    mtime: 1779610765
+
+  - path: Common/Core/Utilities.swift
+    target: common
+    purpose: Utility functions (port configuration, extended attributes)
+    module: Common.framework
+    checksum: 17954b14
+    mtime: 1779610765
+    extensions:
+      - URL
+      - String utilities
+    keyFunctions:
+      - defaultPort (24680)
+      - xattr access
+    interfaces:
+      - System utilities
+
+  - path: Common/Core/DigitFormatter.swift
+    target: common
+    purpose: Number input formatting
+    module: Common.framework
+    checksum: 211b0fe1
+    mtime: 1779610765
+    classes:
+      - DigitFormatter
+    interfaces:
+      - NSFormatter protocol
+
+  - path: Common/Core/Throttle.swift
+    target: common
+    purpose: Rate limiting/throttling utility
+    module: Common.framework
+    checksum: 40f65a83
+    mtime: 1788073502
+    classes:
+      - Throttle
+
+  - path: Common/Core/UserDefaults+ObservableProperty.swift
+    target: common
+    purpose: "Deprecated; superseded by SharedConfigStore. File retained as a tombstone."
+    module: Common.framework
+    checksum: 889dd973
+    mtime: 1779610765
+
+  - path: Common/Core/Descriptions.swift
+    target: common
+    purpose: CustomStringConvertible implementations
+    module: Common.framework
+    checksum: 0895cf99
+    mtime: 1779610765
+    extensions:
+      - DomainService
+      - NSFileProviderFileSystemFlags descriptions
+      - Common
+    interfaces:
+      - Debug/display formatting
+
+  # Common Framework - Metadata
+  - path: Common/Metadata/MetadataTranslator.swift
+    target: common
+    purpose: Backend ↔ display metadata translation (name *and* size).
+    module: Common.framework
+    checksum: 530f2e39
+    mtime: 1790532009
+    classes:
+      - IdentityMetadataTranslator
+    protocols:
+      - MetadataTranslator
+
+  - path: Common/Metadata/Boxcryptor/BoxcryptorMetadataTranslator.swift
+    target: common
+    purpose: "Boxcryptor BC01 metadata translation: the `.bc` filename suffix and the 4096-aligned"
+    module: Common.framework
+    checksum: fc1a2b77
+    mtime: 1790486197
+    classes:
+      - BoxcryptorMetadataTranslator
+
+  # Common Framework - UI
+  - path: Common/UI/View/EnumerationView.swift
+    target: common
+    purpose: SwiftUI view for sync progress monitoring
+    module: Common.framework
+    checksum: cf8f82cb
+    mtime: 1790695513
+    classes:
+      - EnumerationView
+      - EnumerationType
+      - EnumeratorObservableObject
+      - State
+      - Entry
+      - ItemType
+      - ItemRow
+
+  # Server Framework - HTTP
+  - path: Server/HTTP/StandaloneServer.swift
+    target: server
+    purpose: HTTP server exposing local JSON-RPC API on port 24680
+    module: Server.framework
+    checksum: 7cad7a5a
+    mtime: 1790695513
+    classes:
+      - StandaloneServer
+      - StandaloneServerError
+
+  # Server Framework - Emulator
+  - path: Server/Emulator/DomainBackend.swift
+    target: server
+    purpose: Domain management backend logic with storage location support
+    module: Server.framework
+    checksum: 6a57ed59
+    mtime: 1790695513
+    classes:
+      - DomainBackend
+    protocols:
+      - XAttrSettable
+    extensions:
+      - String
+      - Bool
+      - DomainBackend
+
+  - path: Server/Emulator/ItemDatabase.swift
+    target: server
+    purpose: SQLite item database with sync anchor, locking, and conflict resolution
+    module: Server.framework
+    checksum: f1d96f5b
+    mtime: 1790695513
+    classes:
+      - Synchronized
+      - Lock
+      - ItemDatabase
+      - ConflictResolutionStrategy
+      - SignalStrategy
+      - ListenerWrapper
+      - ChangeType
+    extensions:
+      - Connection
+      - SQLite
+
+  - path: Server/Emulator/ItemDatabase+Fetch.swift
+    target: server
+    purpose: Query and fetch operations on item database
+    module: Server.framework
+    checksum: e28b2102
+    mtime: 1790390743
+    extensions:
+      - ItemDatabase
+
+  - path: Server/Emulator/ItemDatabase+CreateUpdate.swift
+    target: server
+    purpose: Create and update operations on database
+    module: Server.framework
+    checksum: b61ae4df
+    mtime: 1790390743
+    extensions:
+      - ItemDatabase
+
+  - path: Server/Emulator/ItemDatabase+Account.swift
+    target: server
+    purpose: Account-specific database queries and storage location management
+    module: Server.framework
+    checksum: 8d360741
+    mtime: 1781161558
+    extensions:
+      - DBAccount
+      - ItemDatabase (account operations)
+    classes:
+      - DBAccount
+    keyFunctions:
+      - allAccounts()
+      - account(for:)
+      - setAccountRoot(for:displayName:root:)
+      - removeAccount(for:)
+    interfaces:
+      - Account-scoped queries
+
+  - path: Server/Emulator/ExpressionSubscriptable.swift
+    target: server
+    purpose: SQLite expression subscripting utility
+    module: Server.framework
+    checksum: 269b4966
+    mtime: 1779610765
+    classes:
+      - RowWrapper
+    protocols:
+      - ExpressionSubscriptable
+    extensions:
+      - Row
+    interfaces:
+      - SQLite.swift extension
+
+  # Server Framework - Dispatch
+  - path: Server/Dispatch/DispatchBackend.swift
+    target: server
+    purpose: GCD-based backend dispatch for concurrent operations
+    module: Server.framework
+    checksum: 03582d70
+    mtime: 1779610765
+    protocols:
+      - DispatchBackend
+      - BackendCallRegistration
+    interfaces:
+      - Concurrent operation scheduling
+
+  - path: Server/Dispatch/BackendDispatch.swift
+    target: server
+    purpose: Backend dispatcher routing
+    module: Server.framework
+    checksum: 151dd729
+    mtime: 1790695513
+    classes:
+      - BackendDispatch
+
+  - path: Server/Dispatch/DomainService+Extensions.swift
+    target: server
+    purpose: Server-side extensions to DomainService protocol
+    module: Server.framework
+    checksum: 32efd580
+    mtime: 1787438920
+    extensions:
+      - DomainService
+      - String
+    keyFunctions:
+      - contentSizeForContentRow(
+
+  # Server Framework - HTTP / Provisioning
+  - path: Server/HTTP/Errors.swift
+    target: server
+    purpose: Server-specific error types
+    module: Server.framework
+    checksum: 6c838b15
+    mtime: 1779610765
+    extensions:
+      - CommonError
+    interfaces:
+      - Backend error handling
+
+  - path: Server/Provisioning/Emulator/EmulatorProvisioningService.swift
+    target: server
+    purpose: DomainProvisioningService implementation backed by StandaloneServer.
+    module: Server.framework
+    checksum: ccde58c6
+    mtime: 1781161691
+    classes:
+      - EmulatorProvisioningService
+
+  # VaultSync App
+  - path: VaultSync/AppDelegate.swift
+    target: vaultsync
+    purpose: Application lifecycle, server startup, and domain management orchestration
+    checksum: "91628514"
+    mtime: 1790695513
+    classes:
+      - UnregisterOutcome
+      - MillisecondTransformer
+      - PercentageTransformer
+    extensions:
+      - NSFileProviderDomain
+      - AppDelegate
+
+  - path: VaultSync/AppDelegate+ErrorPresentation.swift
+    target: vaultsync
+    purpose: Error dialog presentation
+    checksum: e6a35453
+    mtime: 1783522293
+    classes:
+      - RecoveryAttempter
+    extensions:
+      - NSError
+      - AppDelegate
+
+  # VaultSync App - MenuBar
+  - path: VaultSync/MenuBar/AppModel.swift
+    target: vaultsync
+    purpose: Observable UI state hub for the menu-bar popover.
+    checksum: 9e3e4569
+    mtime: 1788840299
+    classes:
+      - StatusActivity
+      - AppModel
+      - UnlockDestination
+      - Route
+      - FileListKind
+    protocols:
+      - AppModelActions
+    extensions:
+      - AppModelActions
+
+  - path: VaultSync/MenuBar/StatusItemController.swift
+    target: vaultsync
+    purpose: "Menu-bar status item: icon state machine + attached popover lifecycle."
+    checksum: 98ea0b9b
+    mtime: 1788842186
+    classes:
+      - StatusItemController
+
+  - path: VaultSync/MenuBar/HomeRootView.swift
+    target: vaultsync
+    purpose: Root of the popover navigation stack.
+    checksum: 3ae237aa
+    mtime: 1788841896
+    classes:
+      - HomeRootView
+
+  - path: VaultSync/MenuBar/HomeView.swift
+    target: vaultsync
+    purpose: "Home screen: header, domain list, footer (+ add / Settings)."
+    checksum: 3248e1e2
+    mtime: 1790641561
+    classes:
+      - HomeView
+      - HomeHeader
+      - HomeFooter
+      - SettingsMenu
+      - ShieldWatermark
+      - DomainRow
+      - BackendLogo
+      - DomainStateIcon
+
+  - path: VaultSync/MenuBar/DomainDetailView.swift
+    target: vaultsync
+    purpose: Existing-domain detail (view mode). Full panels land in task 27 step 6 / task 28.
+    checksum: 6c2cfcc5
+    mtime: 1788842186
+    classes:
+      - DomainDetailView
+      - CryptoOpsPanel
+      - DetailPanel
+
+  - path: VaultSync/MenuBar/AddEditDomainScreen.swift
+    target: vaultsync
+    purpose: Add / edit domain screen — hosts the reused ``EditDomainView`` in the popover stack.
+    checksum: d819ad0a
+    mtime: 1788841912
+    classes:
+      - AddEditDomainScreen
+
+  - path: VaultSync/MenuBar/FileListModel.swift
+    target: vaultsync
+    purpose: Enumerator-backed model for the menu-bar materialized / pending file lists.
+    checksum: b02cfa35
+    mtime: 1790695513
+    classes:
+      - FileListModel
+      - Row
+      - EmptyEnumerator
+
+  - path: VaultSync/MenuBar/FileListView.swift
+    target: vaultsync
+    purpose: Materialized / pending / recent file list (task 27 §"Materialized/Pending/Complete view").
+    checksum: 3d8a8e20
+    mtime: 1788069804
+    classes:
+      - FileListView
+      - FileRow
+
+  # VaultSync App - Domains
+  - path: VaultSync/Domains/Controller/EditDomainViewController.swift
+    target: vaultsync
+    purpose: Domain add/edit tab — NSHostingController wrapper hosting `EditDomainView`, plus the
+    checksum: 2ea0041d
+    mtime: 1790695513
+    classes:
+      - EditDomainViewController
+
+  - path: VaultSync/Domains/Controller/RemoveDomainWindowController.swift
+    target: vaultsync
+    purpose: Domain removal confirmation UI
+    checksum: 9e81f858
+    mtime: 1788478128
+    classes:
+      - RemoveDomainWindowController
+
+  - path: VaultSync/Domains/View/EditDomainView.swift
+    target: vaultsync
+    purpose: Domain add/edit form — SwiftUI view + view model.
+    checksum: 72f7319e
+    mtime: 1790641490
+    classes:
+      - OneDriveSignInRequired
+      - DuplicateDomainNameError
+      - BCKeyValidationError
+      - Fields
+      - CredentialValidationError
+      - Reason
+      - EditDomainViewModel
+      - SaveStage
+      - EditDomainView
+
+  - path: VaultSync/Domains/Model/DomainEntry.swift
+    target: vaultsync
+    purpose: Domain model for UI representation
+    checksum: c24cd248
+    mtime: 1788667372
+    classes:
+      - DomainEntry
+
+  # VaultSync App - Preferences
+  - path: VaultSync/Preferences/TweaksViewController.swift
+    target: vaultsync
+    purpose: "Tweaks tab: SwiftUI bindings to host-local UserDefaults plus cross-process SharedConfigStore."
+    checksum: e20ff20d
+    mtime: 1787446154
+    classes:
+      - TweaksViewController
+      - TweaksView
+
+  - path: VaultSync/Preferences/EncryptionConfigSection.swift
+    target: vaultsync
+    purpose: SwiftUI section for per-domain encryption configuration embedded in the Edit Domain tab.
+    checksum: f1cae475
+    mtime: 1782782735
+    classes:
+      - EncryptionConfigSection
+
+  - path: VaultSync/Preferences/SharedConfigUserDefaultsMirror.swift
+    target: vaultsync
+    purpose: Two-way mirror between selected UserDefaults keys and SharedConfigStore fields.
+    checksum: e297d00f
+    mtime: 1782708487
+    classes:
+      - SharedConfigUserDefaultsMirror
+      - Entry
+
+  - path: VaultSync/Preferences/UserInteractionSuppressionWindowController.swift
+    target: vaultsync
+    purpose: Process exclusion configuration UI
+    checksum: ddbddf41
+    mtime: 1779610765
+    classes:
+      - UserInteractionSuppressionWindowController
+    interfaces:
+      - Process suppression management
+
+  - path: VaultSync/Preferences/UserInteractionSuppressionEditor.swift
+    target: vaultsync
+    purpose: Process suppression editor logic
+    checksum: 5f089f67
+    mtime: 1779610765
+    classes:
+      - UserInteractionSuppressionEditor
+    interfaces:
+      - Process list management
+
+  # VaultSync App - OneDrive
+  - path: VaultSync/OneDrive/OneDriveSignIn.swift
+    target: vaultsync
+    purpose: Interactive OneDrive (Microsoft identity) sign-in for the container app.
+    checksum: 3508e8c1
+    mtime: 1790695513
+    classes:
+      - OneDriveSignIn
+      - AnchorProvider
+
+  - path: VaultSync/OneDrive/OneDriveFolderBrowser.swift
+    target: vaultsync
+    purpose: Lightweight Microsoft Graph folder browser for the container app's setup UI.
+    checksum: 8b5f3f97
+    mtime: 1790695513
+    classes:
+      - OneDriveFolder
+      - OneDriveFolderBrowser
+
+  - path: VaultSync/OneDrive/OneDriveFolderPicker.swift
+    target: vaultsync
+    purpose: Modal folder picker for selecting a OneDrive serving folder during domain setup.
+    checksum: 31981f2d
+    mtime: 1788571169
+    classes:
+      - PickedOneDriveFolder
+      - OneDriveFolderPicker
+      - Model
+      - Level
+
+  # VaultSync App - Enumeration / Shared
+  - path: VaultSync/Enumeration/EnumerationWindowController.swift
+    target: vaultsync
+    purpose: Sync operation monitoring UI
+    checksum: 7a92dce7
+    mtime: 1779610765
+    classes:
+      - EnumerationWindowController
+    interfaces:
+      - Sync progress monitoring
+
+  - path: VaultSync/Shared/BlockedProcessesEditorView.swift
+    target: vaultsync
+    purpose: SwiftUI view for process exclusion configuration.
+    checksum: 7143bd30
+    mtime: 1779610765
+    classes:
+      - BlockedProcessesEditorView
+    interfaces:
+      - SwiftUI process configuration UI
+
+  - path: VaultSync/Shared/SharedSwiftUI.swift
+    target: vaultsync
+    purpose: Shared SwiftUI utilities
+    checksum: "09e31414"
+    mtime: 1779610765
+    classes:
+      - CellWithLabelAndDeleteAction
+    extensions:
+      - SwiftUI view modifiers
+    interfaces:
+      - UI component utilities
+
+  # Action Extension
+  - path: Action/ActionViewController.swift
+    target: action
+    purpose: Custom action result UI handler
+    checksum: 32fd3cbf
+    mtime: 1790695513
+    classes:
+      - ActionViewController
+    protocols:
+      - ConcreteActionViewController
+
+  - path: Action/ConflictViewController.swift
+    target: action
+    purpose: Conflict resolution UI (Other Versions display)
+    checksum: 747083d0
+    mtime: 1790695513
+    classes:
+      - ConflictViewController
+      - ConflictDescriptor
+      - EditDateValueTransformer
+
+  - path: Action/AuthenticationViewController.swift
+    target: action
+    purpose: Authentication UI (login dialogs)
+    checksum: 39deb247
+    mtime: 1790695513
+    classes:
+      - AuthenticationViewController
+
+  # Provider Extension
+  - path: Provider/main.swift
+    target: provider
+    purpose: File Provider extension entry point
+    module: Provider.appex
+    description: Minimal entry point; all logic in Extension.framework
+    checksum: 70b39a7e
+    mtime: 1777568964
+    interfaces:
+      - NSFileProviderReplicatedExtension
+
+  - path: Common/Config/AppIdentifiers.swift
+    target: common
+    purpose: Build-configured identifiers shared by every process.
+    module: Common.framework
+    checksum: 78b421c5
+    mtime: 1790698437
+    classes:
+      - AppIdentifiers
+      - BundleMarker
+
+  - path: Common/Config/VaultGatingDescriptions.swift
+    target: common
+    purpose: The single source of the four gating options' user-facing copy.
+    module: Common.framework
+    checksum: adf72f7d
+    mtime: 1790698437
+    classes:
+      - VaultLockCopy
+    extensions:
+      - SharedConfig
+
+  - path: Common/Core/MaterializedEviction.swift
+    target: common
+    purpose: De-materializing evictable content under a File Provider item.
+    module: Common.framework
+    checksum: d7964dbb
+    mtime: 1788668086
+    classes:
+      - MaterializedEviction
+      - Collector
+
+  - path: Common/Crypto/Boxcryptor/BC01DecryptorFactory.swift
+    target: common
+    purpose: Single construction point for a domain's BC01 decryptor.
+    module: Common.framework
+    checksum: 9d2b3926
+    mtime: 1790552965
+    classes:
+      - BC01DecryptorFactory
+
+  - path: Common/Crypto/Boxcryptor/BC01FileKey.swift
+    target: common
+    purpose: BC01 per-file key layout shared by encryptor and decryptor.
+    module: Common.framework
+    checksum: 5d224aeb
+    mtime: 1790552913
+    classes:
+      - BC01FileKey
+
+  - path: Common/Crypto/Boxcryptor/BC01SpecialItem.swift
+    target: common
+    purpose: "Boxcryptor's special items: entries that are BC01 bookkeeping rather than user content."
+    module: Common.framework
+    checksum: e3219b40
+    mtime: 1790698437
+    classes:
+      - BC01SpecialItem
+
+  - path: Common/Crypto/GatingCeremony.swift
+    target: common
+    purpose: Per-method ceremony producing the key that unwraps `vault.gating.<m>.wrapped`.
+    module: Common.framework
+    checksum: b523b59a
+    mtime: 1790698454
+    classes:
+      - NoneCeremony
+      - PINCeremony
+      - BiometricCeremony
+      - SecureEnclaveCeremony
+    protocols:
+      - GatingCeremony
+
+  - path: Common/Crypto/PINGate.swift
+    target: common
+    purpose: PIN gating key derivation for the vault (tasks 41, 47).
+    module: Common.framework
+    checksum: f8f71991
+    mtime: 1788652934
+    classes:
+      - PINGateError
+      - PINPolicy
+      - Violation
+      - PINRecord
+      - PINAttemptThrottle
+      - PINGate
+
+  - path: Common/Crypto/SecureEnclaveGate.swift
+    target: common
+    purpose: Secure Enclave abstraction for `.secure` vault gating (promptless enroll, prompted key agreement).
+    module: Common.framework
+    checksum: f6fb4a9e
+    mtime: 1790698454
+    classes:
+      - SecureEnclaveEnrollment
+      - SecureEnclaveKeyGate
+    protocols:
+      - SecureEnclaveGate
+
+  - path: Common/Crypto/VaultKeyStore.swift
+    target: common
+    purpose: "Domain roots of trust: each domain owns a `domainKey` that is **always wrapped at rest**,"
+    module: Common.framework
+    checksum: 06fc0e26
+    mtime: 1790695513
+    classes:
+      - VaultKeyStoreError
+      - UnwrappedSlot
+      - VaultReadiness
+      - VaultKeyStore
+      - DeviceKeyBox
+      - GatingBox
+      - StubBiometricGate
+      - StubSecureEnclaveGate
+    protocols:
+      - BiometricGate
+    extensions:
+      - SymmetricKey
+
+  - path: Common/Metadata/Boxcryptor/BC01Framing.swift
+    target: common
+    purpose: "Boxcryptor BC01 on-disk framing: how a plaintext length maps to a ciphertext length, and the"
+    module: Common.framework
+    checksum: 64f0444d
+    mtime: 1790548888
+    classes:
+      - BC01Framing
+
+  - path: Common/Provisioning/BackendRoutingProvisioningService.swift
+    target: common
+    purpose: Routes provisioning calls to the service that owns the domain's backend.
+    module: Common.framework
+    checksum: "64080133"
+    mtime: 1788072820
+    classes:
+      - BackendRoutingProvisioningService
+
+  - path: Common/VaultLock/VaultLockController.swift
+    target: common
+    purpose: Vault lock/unlock policy orchestration (tasks 29, 41, 47, 51).
+    module: Common.framework
+    checksum: 93effd10
+    mtime: 1790695513
+    classes:
+      - VaultLockController
+      - Trigger
+      - LockPolicy
+    protocols:
+      - LockScheduler
+      - SystemLockEvents
+      - VaultKeyGuarding
+    extensions:
+      - VaultKeyStore
+
+  - path: Extension/Backend/BC01HeaderProbe.swift
+    target: extension
+    purpose: Reading a BC01 header off the wire, and the plaintext size that follows from it.
+    module: Extension.framework
+    checksum: 712defb6
+    mtime: 1788146750
+    classes:
+      - BC01HeaderProbe
+      - Outcome
+
+  - path: Extension/Backend/ContentStreamUploader.swift
+    target: extension
+    purpose: Backend-neutral streaming encrypt + upload with bounded memory and parallel lanes.
+    module: Extension.framework
+    checksum: d4f15bd9
+    mtime: 1790532970
+    classes:
+      - BC01UploadPlan
+      - ContentStreamUploader
+      - Result
+    protocols:
+      - ContentPutting
+
+  - path: Extension/Backend/HeaderCacheSeeding.swift
+    target: extension
+    purpose: "Shared write-side of the ``BC01HeaderCache``: seed a row from an upload."
+    module: Extension.framework
+    checksum: 7952fb43
+    mtime: 1790695513
+    classes:
+      - HeaderCacheSeeding
+
+  - path: Extension/Provider/Extension+CreateItem.swift
+    target: extension
+    purpose: Item creation.
+    module: Extension.framework
+    checksum: 29fa4a9a
+    mtime: 1790695513
+    extensions:
+      - Extension
+
+  - path: Extension/Provider/Extension+DeleteItem.swift
+    target: extension
+    purpose: Item deletion.
+    module: Extension.framework
+    checksum: cf4d93f6
+    mtime: 1790460018
+    extensions:
+      - Extension
+
+  - path: Extension/Provider/Extension+Enumerator.swift
+    target: extension
+    purpose: Container enumeration.
+    module: Extension.framework
+    checksum: e2e41938
+    mtime: 1790460018
+    extensions:
+      - Extension
+
+  - path: Extension/Provider/Extension+Invalidate.swift
+    target: extension
+    purpose: "Teardown: winding down this domain's background work."
+    module: Extension.framework
+    checksum: 99de6498
+    mtime: 1790460018
+    extensions:
+      - Extension
+
+  - path: Extension/Provider/Extension+Item.swift
+    target: extension
+    purpose: Single-item meta-data lookup.
+    module: Extension.framework
+    checksum: b702df2b
+    mtime: 1790464736
+    extensions:
+      - Extension
+
+  - path: Extension/Provider/Extension+ModifyItem.swift
+    target: extension
+    purpose: Item modification.
+    module: Extension.framework
+    checksum: 9f8d2a58
+    mtime: 1790460018
+    classes:
+      - EditEncryptionPlan
+    extensions:
+      - Extension
+      - OptionSet
+
+  - path: Extension/Provider/FetchRangeAlignment.swift
+    target: extension
+    purpose: Alignment rules for `fetchPartialContents` ranges.
+    module: Extension.framework
+    checksum: adc98cf2
+    mtime: 1790698437
+    classes:
+      - FetchRangeAlignment
+
+  - path: Extension/Provider/FileContentComparator.swift
+    target: extension
+    purpose: Byte-for-byte file comparison with bounded memory.
+    module: Extension.framework
+    checksum: 2c5e0476
+    mtime: 1790390792
+    classes:
+      - FileContentComparator
+
+  - path: Extension/Provider/PartialFetchWindow.swift
+    target: extension
+    purpose: Sizing policy for byte-range materialisation in `fetchPartialContents`.
+    module: Extension.framework
+    checksum: 6cbe68ab
+    mtime: 1790698454
+    classes:
+      - PartialFetchWindow
+      - Extent
+
+  - path: Extension/Provider/ProviderCancellation.swift
+    target: extension
+    purpose: Graceful-teardown handshake, Provider side (task 41).
+    module: Extension.framework
+    checksum: c1bc421e
+    mtime: 1790695513
+    classes:
+      - ProviderCancellationCoordinator
+
+  - path: VaultSync/MenuBar/ConfirmLockView.swift
+    target: vaultsync
+    purpose: Confirmation for a lock that would discard unsynced local changes (task 41).
+    checksum: 28aeb85d
+    mtime: 1788483605
+    classes:
+      - ConfirmLockView
+
+  - path: VaultSync/MenuBar/PendingItemCounter.swift
+    target: vaultsync
+    purpose: Counts a domain's pending (unsynced) items (task 41).
+    checksum: 3aa279fc
+    mtime: 1788069586
+    classes:
+      - PendingItemCounter
+      - CountingObserver
+
+  - path: VaultSync/MenuBar/SecurityFlow.swift
+    target: vaultsync
+    purpose: Owns the presence capability shared by the Security gate and the Security settings form.
+    checksum: 12f139f4
+    mtime: 1788666570
+    classes:
+      - SecurityFlow
+
+  - path: VaultSync/MenuBar/SecurityView.swift
+    target: vaultsync
+    purpose: "Security screen inside the popover nav stack (tasks 29, 41, 47, 51, 52): choose the unlock"
+    checksum: 07693ffb
+    mtime: 1788669960
+    classes:
+      - GatingSelection
+      - SecurityView
+
+  - path: VaultSync/MenuBar/UnlockView.swift
+    target: vaultsync
+    purpose: Unlock screen for locked vaults (tasks 41, 51).
+    checksum: 05d6ec5c
+    mtime: 1788840299
+    classes:
+      - UnlockView
+
+  - path: VaultSync/MenuBar/VaultGateView.swift
+    target: vaultsync
+    purpose: Vault-readiness gate inside the popover nav stack (task 49).
+    checksum: 636f999f
+    mtime: 1788326174
+    classes:
+      - VaultGateView
+
+  - path: VaultSync/Security/SystemLockScheduler.swift
+    target: vaultsync
+    purpose: Production ``LockScheduler`` for the app process (task 29).
+    checksum: 1a00c0b2
+    mtime: 1790695513
+    classes:
+      - SystemLockScheduler
+
+  - path: VaultSync/Security/WorkspaceLockEvents.swift
+    target: vaultsync
+    purpose: Production ``SystemLockEvents`` for the app process (task 29).
+    checksum: bbcc4c4f
+    mtime: 1790695513
+    classes:
+      - WorkspaceLockEvents
+
+  - path: VaultSync/main.swift
+    target: vaultsync
+    purpose: Application entry point.
+    checksum: 7d3a3280
+    mtime: 1790698437
+
+tests:
+  - path: CommonTests/BC01DecryptorTests.swift
+    purpose: Unit tests for `BC01Decryptor`.
+    checksum: b174242a
+    mtime: 1790698454
+    classes:
+      - BC01DecryptorTests
+
+  - path: CommonTests/BC01AESInPlaceTests.swift
+    purpose: Unit tests for in-place AES block decryption.
+    checksum: cba92abb
+    mtime: 1782618228
+    classes:
+      - BC01AESInPlaceTests
+
+  - path: CommonTests/BC01StreamDecryptTests.swift
+    purpose: Unit tests for `BC01StreamDecrypt`.
+    checksum: b97ff31c
+    mtime: 1790698454
+    classes:
+      - BC01StreamDecryptTests
+      - LaneOrder
+
+  - path: CommonTests/BC01EncryptorTests.swift
+    purpose: Unit tests for `BC01Encryptor`.
+    checksum: 41e4ffb7
+    mtime: 1790698454
+    classes:
+      - BC01EncryptorTests
+
+  - path: CommonTests/BC01IntegrationTests.swift
+    purpose: Unit tests for `BC01Integration`.
+    checksum: e16ea19f
+    mtime: 1790698454
+    classes:
+      - BC01IntegrationTests
+
+  - path: CommonTests/CommonTests.swift
+    purpose: Common framework test suite entry point.
+    checksum: 930f18f3
+    mtime: 1780723633
+    classes:
+      - CommonTests
+
+  - path: ExtensionTests/ContentEncryptionConverterTests.swift
+    purpose: Unit tests for `ContentEncryptionConverter`.
+    checksum: 172ec380
+    mtime: 1790698454
+    classes:
+      - ContentEncryptionConverterTests
+      - Recorder
+      - NoKey
+
+  - path: ExtensionTests/ContentStreamDownloadTests.swift
+    purpose: Unit tests for `ContentStreamDownload`.
+    checksum: 066b12dd
+    mtime: 1790698454
+    classes:
+      - FakeFetcher
+      - ContentStreamDownloadTests
+      - Box
+      - TruncatingFetcher
+
+  - path: ExtensionTests/BC01HeaderCacheTests.swift
+    purpose: Unit tests for `BC01HeaderCache`.
+    checksum: 3982d55e
+    mtime: 1790698454
+    classes:
+      - BC01HeaderCacheTests
+
+  - path: ExtensionTests/ExtensionTests.swift
+    purpose: Extension framework test suite entry point.
+    checksum: 89b184e4
+    mtime: 1781580576
+    classes:
+      - ExtensionTests
+
+  - path: VaultSyncTests/VaultSyncTests.swift
+    purpose: Unit tests for `VaultSync`.
+    checksum: 4ffdf83d
+    mtime: 1790698454
+    classes:
+      - VaultSyncTests
+
+  - path: ServerTests/ServerTests.swift
+    purpose: Unit tests for `Server`.
+    checksum: e5436aa5
+    mtime: 1790698454
+    classes:
+      - ServerTests
+
+  - path: CommonTests/DomainDeprovisioningServiceTests.swift
+    purpose: Unit tests for `DomainDeprovisioningService`.
+    checksum: 4b68cf32
+    mtime: 1790698454
+    classes:
+      - DomainDeprovisioningServiceTests
+      - StepError
+
+  - path: ExtensionTests/DomainDeprovisioningIntegrationTests.swift
+    purpose: Unit tests for `DomainDeprovisioningIntegration`.
+    checksum: fe71d7c3
+    mtime: 1790698454
+    classes:
+      - DomainDeprovisioningIntegrationTests
+
+  - path: ExtensionTests/MetadataCachePagingTests.swift
+    purpose: Unit tests for `MetadataCachePaging`.
+    checksum: 591d7aa0
+    mtime: 1790698454
+    classes:
+      - MetadataCachePagingTests
+
+  - path: ExtensionTests/ResourceForkGateTests.swift
+    purpose: Unit tests for `ResourceForkGate`.
+    checksum: b4465848
+    mtime: 1790698454
+    classes:
+      - ForkSpyBackend
+      - ResourceForkGateTests
+
+  - path: ExtensionTests/EnumerationBatchingTests.swift
+    purpose: Unit tests for enumerator change batching under the item-count limit.
+    checksum: eb5b7c59
+    mtime: 1782703797
+    classes:
+      - EnumerationBatchingTests
+
+  - path: ExtensionTests/GraphDeltaSyncParentTests.swift
+    purpose: Unit tests for `GraphDeltaSyncParent`.
+    checksum: 0c9af279
+    mtime: 1790698454
+    classes:
+      - GraphDeltaSyncParentTests
+
+  - path: ExtensionTests/MetadataCacheBatchSeedTests.swift
+    purpose: Unit tests for `MetadataCacheBatchSeed`.
+    checksum: 82b4f2fc
+    mtime: 1790698454
+    classes:
+      - MetadataCacheBatchSeedTests
+
+  - path: ExtensionTests/MetadataCacheLocalMetadataTests.swift
+    purpose: Unit tests for `MetadataCacheLocalMetadata`.
+    checksum: baec48b0
+    mtime: 1790698454
+    classes:
+      - MetadataCacheLocalMetadataTests
+
+  - path: VaultSyncTests/OneDriveEncryptOnEditE2ETests.swift
+    purpose: Unit tests for `OneDriveEncryptOnEditE2E`.
+    checksum: b902f5ca
+    mtime: 1790698454
+    classes:
+      - OneDriveEncryptOnEditE2ETests
+      - Fixture
+      - GraphItem
+
+  - path: VaultSyncTests/OneDriveRemoteWriteProbe.swift
+    purpose: Test helper probing OneDrive remote writes.
+    checksum: 362a7f1a
+    mtime: 1790698454
+    classes:
+      - OneDriveRemoteWriteProbe
+
+  - path: CommonTests/ProgressSnapshotTests.swift
+    purpose: Unit tests for `ProgressSnapshot`.
+    checksum: 571d31bf
+    mtime: 1790698454
+    classes:
+      - ProgressSnapshotTests
+
+  - path: ExtensionTests/CryptoProgressReporterTests.swift
+    purpose: Unit tests for `CryptoProgressReporter`.
+    checksum: 17dd36bc
+    mtime: 1790698454
+    classes:
+      - CryptoProgressReporterTests
+
+  - path: ExtensionTests/EncryptionProgressReporterTests.swift
+    purpose: Unit tests for the bulk encrypt/decrypt Finder progress reporter.
+    checksum: daaee019
+    mtime: 1783294911
+    classes:
+      - EncryptionProgressReporterTests
+
+  - path: ExtensionTests/MetadataCacheIndexedCountTests.swift
+    purpose: Unit tests for `MetadataCacheIndexedCount`.
+    checksum: 0e94a14b
+    mtime: 1790698454
+    classes:
+      - MetadataCacheIndexedCountTests
+
+  - path: ExtensionTests/MetadataCacheTrashNameTests.swift
+    purpose: Unit tests for `MetadataCacheTrashName`.
+    checksum: 86f96b17
+    mtime: 1790698454
+    classes:
+      - MetadataCacheTrashNameTests
+
+  - path: ExtensionTests/RenameBackendFilenameTests.swift
+    purpose: Unit tests that rename/reparent preserve backend encryption state.
+    checksum: f37311fe
+    mtime: 1783316672
+    classes:
+      - RenameBackendFilenameTests
+
+  - path: ExtensionTests/SignalThrottleTests.swift
+    purpose: Unit tests for SignalThrottle leading/trailing coalescing.
+    checksum: 1de1e228
+    mtime: 1783301527
+    classes:
+      - SignalThrottleTests
+      - Harness
+
+  - path: VaultSyncTests/AppModelTests.swift
+    purpose: Unit tests for `AppModel`.
+    checksum: "365e4729"
+    mtime: 1790698454
+    classes:
+      - AppModelTests
+
+  - path: VaultSyncTests/EditDomainViewModelNameTests.swift
+    purpose: Unit tests for `EditDomainViewModelName`.
+    checksum: 7c07ed6c
+    mtime: 1790698454
+    classes:
+      - EditDomainViewModelNameTests
+
+  - path: CommonTests/BC01FramingTests.swift
+    purpose: Unit tests for `BC01Framing`.
+    checksum: 0c7626cb
+    mtime: 1790698454
+    classes:
+      - BC01FramingTests
+
+  - path: CommonTests/BC01HeaderHMACTests.swift
+    purpose: Unit tests for `BC01HeaderHMAC`.
+    checksum: 6ef9b260
+    mtime: 1790698454
+    classes:
+      - BC01HeaderHMACTests
+
+  - path: CommonTests/BC01ProbeFramingTests.swift
+    purpose: Unit tests for `BC01ProbeFraming`.
+    checksum: b225939a
+    mtime: 1790698454
+    classes:
+      - BC01ProbeFramingTests
+
+  - path: CommonTests/BC01SpecialItemTests.swift
+    purpose: Unit tests for `BC01SpecialItem`.
+    checksum: a04e64a3
+    mtime: 1790698454
+    classes:
+      - BC01SpecialItemTests
+
+  - path: CommonTests/BackendRoutingProvisioningServiceTests.swift
+    purpose: Unit tests for `BackendRoutingProvisioningService`.
+    checksum: 1bef49f3
+    mtime: 1790698454
+    classes:
+      - BackendRoutingProvisioningServiceTests
+      - SpyProvisioningService
+
+  - path: CommonTests/BoxcryptorMetadataTranslatorSizeTests.swift
+    purpose: Unit tests for `BoxcryptorMetadataTranslatorSize`.
+    checksum: 7c528036
+    mtime: 1790698454
+    classes:
+      - BoxcryptorMetadataTranslatorSizeTests
+
+  - path: CommonTests/ConfigIsolatedTestCase.swift
+    purpose: Base XCTestCase isolating shared configuration per test.
+    checksum: 41b11725
+    mtime: 1790698454
+    classes:
+      - ConfigIsolatedTestCase
+
+  - path: CommonTests/CryptoConfigViewModelTests.swift
+    purpose: Unit tests for `CryptoConfigViewModel`.
+    checksum: 9656bf3c
+    mtime: 1790698454
+    classes:
+      - CryptoConfigViewModelTests
+
+  - path: CommonTests/CryptoKeychainSlotTests.swift
+    purpose: Unit tests for `CryptoKeychainSlot`.
+    checksum: 1439727e
+    mtime: 1790698454
+    classes:
+      - CryptoKeychainSlotTests
+
+  - path: CommonTests/GraphDecodingDateTests.swift
+    purpose: Timestamp parsing for Graph payloads.
+    checksum: b0f4cb2d
+    mtime: 1788239687
+    classes:
+      - GraphDecodingDateTests
+      - Box
+
+  - path: CommonTests/KeychainIsolatedTestCase.swift
+    purpose: Base XCTestCase isolating keychain items per test.
+    checksum: 6359f1bb
+    mtime: 1790698454
+    classes:
+      - KeychainIsolatedTestCase
+
+  - path: CommonTests/MSALTokenStoreTests.swift
+    purpose: Unit tests for `MSALTokenStore`.
+    checksum: 760f23ea
+    mtime: 1790698454
+    classes:
+      - MSALTokenStoreTests
+      - InMemoryRefreshTokenStore
+      - StubURLProtocol
+      - Stub
+
+  - path: CommonTests/PINGateTests.swift
+    purpose: Unit tests for the PIN gating key derivation (tasks 41, 47).
+    checksum: 2148bfe7
+    mtime: 1788653160
+    classes:
+      - PINGateTests
+
+  - path: CommonTests/QuitLockPolicyTests.swift
+    purpose: The lock-on-quit rule in ``SharedConfig``.
+    checksum: de245d6a
+    mtime: 1788746782
+    classes:
+      - QuitLockPolicyTests
+
+  - path: CommonTests/ThrottleTests.swift
+    purpose: Unit tests for `Throttle`.
+    checksum: 981f5262
+    mtime: 1790698454
+    classes:
+      - ThrottleTests
+
+  - path: CommonTests/VaultKeyStoreTests.swift
+    purpose: Unit tests for `VaultKeyStore`.
+    checksum: "68817086"
+    mtime: 1790698454
+    classes:
+      - StubGate
+      - VaultKeyStoreTests
+      - VaultKeyStoreDomainTests
+      - CountingSecureEnclaveGate
+
+  - path: CommonTests/VaultLockControllerTests.swift
+    purpose: Unit tests for `VaultLockController`.
+    checksum: 05388ba6
+    mtime: 1790698454
+    classes:
+      - ManualScheduler
+      - ManualEvents
+      - StubGate
+      - FakeGuard
+      - PolicyBox
+      - VaultLockControllerTests
+
+  - path: ExtensionTests/BC01FolderKeyHidingTests.swift
+    purpose: Unit tests for `BC01FolderKeyHiding`.
+    checksum: c65109ba
+    mtime: 1790698454
+    classes:
+      - BC01FolderKeyHidingTests
+
+  - path: ExtensionTests/BC01FolderKeySeederTests.swift
+    purpose: Unit tests for `BC01FolderKeySeeder`.
+    checksum: acd5a25b
+    mtime: 1790698454
+    classes:
+      - BC01FolderKeySeederTests
+
+  - path: ExtensionTests/BC01HeaderSizeTests.swift
+    purpose: Unit tests for `BC01HeaderSize`.
+    checksum: 8a0b4e6a
+    mtime: 1790698454
+    classes:
+      - CountingFetcher
+      - BC01HeaderSizeTests
+      - CacheKey
+
+  - path: ExtensionTests/BackendResourceCleanupTests.swift
+    purpose: Unit tests for `BackendResourceCleanup`.
+    checksum: 5c43d5bf
+    mtime: 1790698454
+    classes:
+      - BackendResourceCleanupTests
+
+  - path: ExtensionTests/ByteRangeMaterialisationGateTests.swift
+    purpose: Unit tests for `ByteRangeMaterialisationGate`.
+    checksum: 673f5ef3
+    mtime: 1790698454
+    classes:
+      - RangeSpyFetcher
+      - ByteRangeMaterialisationGateTests
+
+  - path: ExtensionTests/ConfigIsolatedTestCase.swift
+    purpose: Base XCTestCase isolating shared configuration per test.
+    checksum: bce6a49d
+    mtime: 1790698454
+    classes:
+      - ConfigIsolatedTestCase
+
+  - path: ExtensionTests/ContentStreamUploadTests.swift
+    purpose: Unit tests for `ContentStreamUpload`.
+    checksum: 4bf918ac
+    mtime: 1790698454
+    classes:
+      - FakePutter
+      - ContentStreamUploadTests
+      - SilentPutter
+      - Captured
+      - ReplayFetcher
+      - FixedSessionEncryptor
+    extensions:
+      - ContentStreamUploadTests
+
+  - path: ExtensionTests/DeltaPollerPolicyTests.swift
+    purpose: Unit tests for `DeltaPollerPolicy`.
+    checksum: fe98d918
+    mtime: 1790698454
+    classes:
+      - DeltaPassCompletionReportingTests
+      - DeltaPollerVaultLockedStopTests
+
+  - path: ExtensionTests/EnumerationPublishGateTests.swift
+    purpose: Unit tests for `EnumerationPublishGate`.
+    checksum: 43948d67
+    mtime: 1790698454
+    classes:
+      - EnumerationPublishGateTests
+
+  - path: ExtensionTests/FetchRangeAlignmentTests.swift
+    purpose: Unit tests for `FetchRangeAlignment`.
+    checksum: 708c647f
+    mtime: 1790698454
+    classes:
+      - FetchRangeAlignmentTests
+
+  - path: ExtensionTests/FileContentComparatorTests.swift
+    purpose: Unit tests for `FileContentComparator`.
+    checksum: d51c6735
+    mtime: 1790698454
+    classes:
+      - FileContentComparatorTests
+
+  - path: ExtensionTests/GraphContentPutterTests.swift
+    purpose: Unit tests for `GraphContentPutter`.
+    checksum: d8e9c9ac
+    mtime: 1790698454
+    classes:
+      - FakeGraphTransport
+      - GraphContentPutterTests
+
+  - path: ExtensionTests/GraphDeltaSelectProbeTests.swift
+    purpose: "Probe: does `$select` suppress the `deleted` facet / `deletedDateTime` on delta tombstones?"
+    checksum: e7afb345
+    mtime: 1790695513
+    classes:
+      - GraphDeltaSelectProbeTests
+
+  - path: ExtensionTests/GraphDeltaSyncCrawlCompleteTests.swift
+    purpose: Unit tests for `GraphDeltaSyncCrawlComplete`.
+    checksum: e60a8d71
+    mtime: 1790698454
+    classes:
+      - GraphDeltaSyncCrawlCompleteTests
+
+  - path: ExtensionTests/GraphDeltaSyncPageEventTests.swift
+    purpose: Unit tests for `GraphDeltaSyncPageEvent`.
+    checksum: abebf4cc
+    mtime: 1790698454
+    classes:
+      - GraphDeltaSyncPageEventTests
+      - StubExhausted
+
+  - path: ExtensionTests/GraphDeltaSyncPerfTests.swift
+    purpose: Unit tests for `GraphDeltaSyncPerf`.
+    checksum: a824e147
+    mtime: 1790698454
+    classes:
+      - GraphDeltaSyncPerfTests
+      - Report
+      - Root
+
+  - path: ExtensionTests/GraphDriveClientCrawlGateTests.swift
+    purpose: Unit tests for `GraphDriveClientCrawlGate`.
+    checksum: 167e1c50
+    mtime: 1790698454
+    classes:
+      - GraphDriveClientCrawlGateTests
+
+  - path: ExtensionTests/KeychainIsolatedTestCase.swift
+    purpose: Base XCTestCase isolating keychain items per test.
+    checksum: e29eab4e
+    mtime: 1790698454
+    classes:
+      - KeychainIsolatedTestCase
+
+  - path: ExtensionTests/MetadataCacheEmptyTests.swift
+    purpose: Tests for in-place emptying of the OneDrive metadata cache (task 41).
+    checksum: 0395064e
+    mtime: 1788239687
+    classes:
+      - MetadataCacheEmptyTests
+
+  - path: ExtensionTests/MetadataCachePlaintextSizeTests.swift
+    purpose: Unit tests for `MetadataCachePlaintextSize`.
+    checksum: 315cd5c5
+    mtime: 1790698454
+    classes:
+      - MetadataCachePlaintextSizeTests
+
+  - path: ExtensionTests/MetadataCacheTombstonedIDsTests.swift
+    purpose: Unit tests for `MetadataCacheTombstonedIDs`.
+    checksum: ff08afec
+    mtime: 1790698454
+    classes:
+      - MetadataCacheTombstonedIDsTests
+
+  - path: ExtensionTests/PartialFetchWindowTests.swift
+    purpose: Unit tests for `PartialFetchWindow`.
+    checksum: d72a16f6
+    mtime: 1790698454
+    classes:
+      - PartialFetchWindowTests
+
+  - path: ExtensionTests/PlaintextSizeVersionTests.swift
+    purpose: Unit tests for `PlaintextSizeVersion`.
+    checksum: e358966e
+    mtime: 1790698454
+    classes:
+      - PlaintextSizeVersionTests
+
+  - path: ExtensionTests/ProviderCancellationTests.swift
+    purpose: Unit tests for `ProviderCancellation`.
+    checksum: f8a705e0
+    mtime: 1790698454
+    classes:
+      - ProviderCancellationTests
+
+  - path: ExtensionTests/ProviderRefreshTokenTests.swift
+    purpose: Unit tests for `ProviderRefreshToken`.
+    checksum: 29d7ba25
+    mtime: 1790698454
+    classes:
+      - ProviderRefreshTokenTests
+
+  - path: ExtensionTests/VaultGatingTests.swift
+    purpose: Unit tests for `VaultGating`.
+    checksum: 448693b2
+    mtime: 1790698454
+    classes:
+      - StubEnclaveGate
+      - LostKeyEnclaveGate
+      - CountingBiometricGate
+      - VaultGatingTests
+      - Box
+
+  - path: VaultSyncTests/SecurityFlowTests.swift
+    purpose: Lifetime of the presence capability shared by the Security gate and the settings form.
+    checksum: f66087d8
+    mtime: 1790641389
+    classes:
+      - SecurityFlowTests
+      - Recorder
+
+  - path: VaultSyncTests/VaultReadinessRoutingTests.swift
+    purpose: Unit tests for `VaultReadinessRouting`.
+    checksum: 29b8c691
+    mtime: 1790698454
+    classes:
+      - StubActions
+      - VaultReadinessRoutingTests
+
+documentation:
+  - path: CLAUDE.md
+    purpose: Project-level Claude Code instructions and coding rules
+    checksum: 849bb0b8
+    mtime: 1790695513
+
+  - path: README.md
+    purpose: Apple sample code overview for file provider sync extension
+    checksum: f3f59007
+    mtime: 1790641388
+    topics:
+      - Project overview
+      - Setup instructions
+
+  - path: docs/crypto/boxcryptor-filename.md
+    purpose: Boxcryptor filename encryption and .bc suffix conventions
+    checksum: ae8f5237
+    mtime: 1790697943
+    topics:
+      - Filename encryption
+      - BC01 suffix
+
+  - path: docs/crypto/boxcryptor.md
+    purpose: Boxcryptor BC01 file format reference
+    checksum: 430e8d9c
+    mtime: 1790697898
+    topics:
+      - BC01 file format
+      - Binary layout
+
+  - path: docs/crypto/boxcryptor-keys.md
+    purpose: Boxcryptor key derivation and keychain storage reference
+    checksum: 932ed806
+    mtime: 1790697924
+    topics:
+      - PBKDF2 key derivation
+      - RSA key storage
+
+  - path: docs/design/architecture.md
+    purpose: Complete architecture overview (frameworks, targets, dependencies)
+    checksum: e59725aa
+    mtime: 1790697695
+    topics:
+      - Framework architecture
+      - Module dependencies
+      - Sandboxing & entitlements
+      - IPC/RPC design
+      - Testing strategy
+
+  - path: docs/design/module-structure.md
+    purpose: As-built module/folder structure across all targets
+    checksum: ef476242
+    mtime: 1790697727
+    topics:
+      - Module structure
+      - Folder layout
+      - Target organization
+
+  - path: docs/backend/local-server-emulator.md
+    purpose: local-server-emulator.md
+    checksum: e0998e08
+    mtime: 1790697913
+
+  - path: docs/backend/overview.md
+    purpose: overview.md
+    checksum: 3c1f2405
+    mtime: 1790697763
+
+  - path: docs/backend/remote-onedrive.md
+    purpose: remote-onedrive.md
+    checksum: fbcdb804
+    mtime: 1790697853
+
+  - path: docs/crypto/application.md
+    purpose: application.md
+    checksum: 45338e7e
+    mtime: 1790697842
+
+  - path: docs/workflows/createItem.md
+    purpose: createItem.md
+    checksum: ee0d6a66
+    mtime: 1790697805
+
+  - path: docs/workflows/enumeration.md
+    purpose: enumeration.md
+    checksum: b57e7b90
+    mtime: 1790697879
+
+  - path: docs/workflows/fetchcontents.md
+    purpose: fetchcontents.md
+    checksum: 8d4e2664
+    mtime: 1790697760
+
+  - path: docs/workflows/modifyItem.md
+    purpose: modifyItem.md
+    checksum: 67c3192f
+    mtime: 1790697843
+
+configuration:
+  - path: Configuration/Application.xcconfig
+    purpose: Build configuration for unique bundle identifiers
+    description: Defines DEVELOPMENT_TEAM and BUNDLE_ID_PREFIX; derives APP_BUNDLE_ID, APP_GROUP_ID, OAUTH_REDIRECT_SCHEME and MSGRAPH_CLIENT_ID for all targets.
+    checksum: c2688755
+    mtime: 1790695513

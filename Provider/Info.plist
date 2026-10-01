@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>CFBundleDisplayName</key>
+	<string>Provider</string>
+	<key>CFBundleExecutable</key>
+	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIcons</key>
+	<dict>
+		<key>CFBundlePrimaryIcon</key>
+		<dict>
+			<key>CFBundleIconFile</key>
+			<string>ProviderIcon</string>
+			<key>CFBundleSymbolName</key>
+			<string>basket</string>
+		</dict>
+	</dict>
+	<key>CFBundleIdentifier</key>
+	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>$(PRODUCT_NAME)</string>
+	<key>CFBundlePackageType</key>
+	<string>$(PRODUCT_BUNDLE_PACKAGE_TYPE)</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>CFBundleVersion</key>
+	<string>$(CURRENT_PROJECT_VERSION)</string>
+	<key>MSGraphClientID</key>
+	<string>$(MSGRAPH_CLIENT_ID)</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSExceptionDomains</key>
+		<dict/>
+	</dict>
+	<key>NSExtension</key>
+	<dict>
+		<key>NSExtensionFileProviderActions</key>
+		<array>
+			<dict>
+				<key>Comment</key>
+				<string>Note that we are comparing with != YES instead of == NO in the query to avoid having to write out the value for the default case</string>
+				<key>NSExtensionFileProviderActionActivationRule</key>
+				<string>domainUserInfo.pinnedFeatureEnabled == 1 &amp;&amp; SUBQUERY ( fileproviderItems, $item, $item.userInfo.pinned != YES &amp;&amp; !($item.contentType.identifier UTI-CONFORMS-TO "public.folder") ).@count &gt; 0</string>
+				<key>NSExtensionFileProviderActionIdentifier</key>
+				<string>$(APP_BUNDLE_ID).Action.Pin</string>
+				<key>NSExtensionFileProviderActionName</key>
+				<string>ACTION_PIN</string>
+			</dict>
+			<dict>
+				<key>NSExtensionFileProviderActionActivationRule</key>
+				<string>domainUserInfo.pinnedFeatureEnabled == 1 &amp;&amp; SUBQUERY ( fileproviderItems, $item, $item.userInfo.pinned == YES ).@count &gt; 0</string>
+				<key>NSExtensionFileProviderActionIdentifier</key>
+				<string>$(APP_BUNDLE_ID).Action.Unpin</string>
+				<key>NSExtensionFileProviderActionName</key>
+				<string>ACTION_UNPIN</string>
+			</dict>
+			<dict>
+				<key>Comment</key>
+				<string>Note that we are comparing with != YES instead of == NO in the query to avoid having to write out the value for the default case</string>
+				<key>NSExtensionFileProviderActionActivationRule</key>
+				<string>SUBQUERY ( fileproviderItems, $item, $item.userInfo.heart != YES &amp;&amp; $item.itemIdentifier != "NSFileProviderRootContainerItemIdentifier" ).@count &gt; 0</string>
+				<key>NSExtensionFileProviderActionIdentifier</key>
+				<string>$(APP_BUNDLE_ID).Action.Heart</string>
+				<key>NSExtensionFileProviderActionName</key>
+				<string>ACTION_HEART</string>
+			</dict>
+			<dict>
+				<key>NSExtensionFileProviderActionActivationRule</key>
+				<string>SUBQUERY ( fileproviderItems, $item, $item.userInfo.heart == YES ).@count &gt; 0</string>
+				<key>NSExtensionFileProviderActionIdentifier</key>
+				<string>$(APP_BUNDLE_ID).Action.Unheart</string>
+				<key>NSExtensionFileProviderActionName</key>
+				<string>ACTION_UNHEART</string>
+			</dict>
+			<dict>
+				<key>NSExtensionFileProviderActionActivationRule</key>
+				<string>SUBQUERY ( fileproviderItems, $item, ($item.contentType.identifier UTI-CONFORMS-TO "public.folder") &amp;&amp; $item.userInfo.isShared.inherited != YES &amp;&amp; $item.inheritedUserInfo.isShared.inherited != YES &amp;&amp; $item.itemIdentifier != "NSFileProviderRootContainerItemIdentifier" ).@count &gt; 0</string>
+				<key>NSExtensionFileProviderActionIdentifier</key>
+				<string>$(APP_BUNDLE_ID).Action.StartSharing</string>
+				<key>NSExtensionFileProviderActionName</key>
+				<string>ACTION_START_SHARING</string>
+			</dict>
+			<dict>
+				<key>NSExtensionFileProviderActionActivationRule</key>
+				<string>SUBQUERY ( fileproviderItems, $item, $item.userInfo.isShared.inherited == YES ).@count &gt; 0</string>
+				<key>NSExtensionFileProviderActionIdentifier</key>
+				<string>$(APP_BUNDLE_ID).Action.StopSharing</string>
+				<key>NSExtensionFileProviderActionName</key>
+				<string>ACTION_STOP_SHARING</string>
+			</dict>
+			<dict>
+				<key>NSExtensionFileProviderActionActivationRule</key>
+				<string>SUBQUERY ( fileproviderItems, $item, $item.userInfo.inUse != NULL ).@count == 1</string>
+				<key>NSExtensionFileProviderActionIdentifier</key>
+				<string>$(APP_BUNDLE_ID).Action.ForceLock</string>
+				<key>NSExtensionFileProviderActionName</key>
+				<string>Mark no longer in use</string>
+			</dict>
+			<dict>
+				<key>NSExtensionFileProviderActionActivationRule</key>
+				<string>SUBQUERY ( fileproviderItems, $item, ($item.contentType.identifier UTI-CONFORMS-TO "public.folder") &amp;&amp; $item.isDownloaded == YES ).@count == 1</string>
+				<key>NSExtensionFileProviderActionIdentifier</key>
+				<string>$(APP_BUNDLE_ID).Action.EvictFolder</string>
+				<key>NSExtensionFileProviderActionName</key>
+				<string>Remove Unpinned</string>
+			</dict>
+			<dict>
+				<key>NSExtensionFileProviderActionActivationRule</key>
+				<string>SUBQUERY ( fileproviderItems, $item, $item.userInfo.encrypted != YES &amp;&amp; $item.userInfo.trashed != YES &amp;&amp; $item.itemIdentifier != "NSFileProviderRootContainerItemIdentifier" ).@count &gt; 0</string>
+				<key>NSExtensionFileProviderActionIdentifier</key>
+				<string>$(APP_BUNDLE_ID).Action.EncryptFiles</string>
+				<key>NSExtensionFileProviderActionName</key>
+				<string>ACTION_ENCRYPT_FILES</string>
+			</dict>
+			<dict>
+				<key>NSExtensionFileProviderActionActivationRule</key>
+				<string>SUBQUERY ( fileproviderItems, $item, $item.userInfo.encrypted != YES &amp;&amp; $item.userInfo.trashed != YES &amp;&amp; !($item.contentType.identifier UTI-CONFORMS-TO "public.folder") &amp;&amp; $item.itemIdentifier != "NSFileProviderRootContainerItemIdentifier" ).@count &gt; 0</string>
+				<key>NSExtensionFileProviderActionIdentifier</key>
+				<string>$(APP_BUNDLE_ID).Action.CreateEncryptedCopy</string>
+				<key>NSExtensionFileProviderActionName</key>
+				<string>ACTION_CREATE_ENCRYPTED_COPY</string>
+			</dict>
+			<dict>
+				<key>NSExtensionFileProviderActionActivationRule</key>
+				<string>SUBQUERY ( fileproviderItems, $item, $item.userInfo.encrypted == YES &amp;&amp; $item.userInfo.trashed != YES ).@count &gt; 0</string>
+				<key>NSExtensionFileProviderActionIdentifier</key>
+				<string>$(APP_BUNDLE_ID).Action.CreateDecryptedCopy</string>
+				<key>NSExtensionFileProviderActionName</key>
+				<string>ACTION_CREATE_DECRYPTED_COPY</string>
+			</dict>
+			<dict>
+				<key>NSExtensionFileProviderActionActivationRule</key>
+				<string>SUBQUERY ( fileproviderItems, $item, ($item.userInfo.encrypted == YES || ($item.contentType.identifier UTI-CONFORMS-TO "public.folder")) &amp;&amp; $item.userInfo.trashed != YES &amp;&amp; $item.itemIdentifier != "NSFileProviderRootContainerItemIdentifier" ).@count &gt; 0</string>
+				<key>NSExtensionFileProviderActionIdentifier</key>
+				<string>$(APP_BUNDLE_ID).Action.DecryptFiles</string>
+				<key>NSExtensionFileProviderActionName</key>
+				<string>ACTION_DECRYPT_FILES</string>
+			</dict>
+			<dict>
+				<key>Comment</key>
+				<string>Restore ("Put Back") for items trashed out-of-band by the encrypt/decrypt action, which get no native Put Back. Gated so every selected item is restorable — never shown alongside the framework's own Put Back.</string>
+				<key>NSExtensionFileProviderActionActivationRule</key>
+				<string>SUBQUERY ( fileproviderItems, $item, $item.userInfo.restorable == YES ).@count == fileproviderItems.@count &amp;&amp; fileproviderItems.@count &gt; 0</string>
+				<key>NSExtensionFileProviderActionIdentifier</key>
+				<string>$(APP_BUNDLE_ID).Action.Restore</string>
+				<key>NSExtensionFileProviderActionName</key>
+				<string>ACTION_RESTORE</string>
+			</dict>
+		</array>
+		<key>NSExtensionFileProviderSupportsEnumeration</key>
+		<true/>
+		<key>NSExtensionFileProviderWantsFlattenedPackages</key>
+		<true/>
+		<key>NSExtensionPointIdentifier</key>
+		<string>com.apple.fileprovider-nonui</string>
+		<key>NSExtensionPrincipalClass</key>
+		<string>Extension.Extension</string>
+		<key>NSFileProviderDecorations</key>
+		<array>
+			<dict>
+				<key>BadgeImageType</key>
+				<string>$(PRODUCT_BUNDLE_IDENTIFIER).pictureFolder</string>
+				<key>Category</key>
+				<string>FolderBadge</string>
+				<key>Identifier</key>
+				<string>$(PRODUCT_BUNDLE_IDENTIFIER).pictureFolder</string>
+				<key>Label</key>
+				<dict>
+					<key>NSStringFormat</key>
+					<string>Picture Folder</string>
+				</dict>
+			</dict>
+			<dict>
+				<key>BadgeImageType</key>
+				<string>com.apple.icon-decoration.badge.warning</string>
+				<key>Category</key>
+				<string>Badge</string>
+				<key>Identifier</key>
+				<string>$(PRODUCT_BUNDLE_IDENTIFIER).hasConflict</string>
+				<key>Label</key>
+				<string>Conflict</string>
+			</dict>
+			<dict>
+				<key>BadgeImageType</key>
+				<string>com.apple.icon-decoration.badge.heart</string>
+				<key>Category</key>
+				<string>Badge</string>
+				<key>Identifier</key>
+				<string>$(PRODUCT_BUNDLE_IDENTIFIER).heart</string>
+				<key>Label</key>
+				<string>Heart item</string>
+			</dict>
+			<dict>
+				<key>BadgeImageType</key>
+				<string>com.apple.icon-decoration.badge.locked-by-user</string>
+				<key>Category</key>
+				<string>Badge</string>
+				<key>Identifier</key>
+				<string>$(PRODUCT_BUNDLE_IDENTIFIER).inUse</string>
+				<key>Predicate</key>
+				<string>item.userInfo.inUse != NULL</string>
+				<key>Label</key>
+				<string>In use</string>
+			</dict>
+			<dict>
+				<key>BadgeImageType</key>
+				<string>com.apple.icon-decoration.badge.pinned</string>
+				<key>Category</key>
+				<string>Badge</string>
+				<key>Identifier</key>
+				<string>$(PRODUCT_BUNDLE_IDENTIFIER).pinned</string>
+				<key>Label</key>
+				<string>Pinned</string>
+			</dict>
+			<dict>
+				<key>BadgeImageType</key>
+				<string>$(PRODUCT_BUNDLE_IDENTIFIER).encrypted</string>
+				<key>Category</key>
+				<string>Badge</string>
+				<key>Identifier</key>
+				<string>$(PRODUCT_BUNDLE_IDENTIFIER).encrypted</string>
+				<key>Label</key>
+				<string>Encrypted</string>
+			</dict>
+			<dict>
+				<key>BadgeImageType</key>
+				<string>$(PRODUCT_BUNDLE_IDENTIFIER).fileError</string>
+				<key>Category</key>
+				<string>Badge</string>
+				<key>Identifier</key>
+				<string>$(PRODUCT_BUNDLE_IDENTIFIER).fileError</string>
+				<key>Label</key>
+				<string>File Error</string>
+			</dict>
+		</array>
+		<key>NSFileProviderUserInteractions</key>
+		<array>
+			<dict>
+				<key>ActivationRule</key>
+				<string>sourceItem != NULL AND sourceItem.userInfo.inUse != NULL AND (action == "Delete" OR action == "Trash" OR action == "Move" OR action == "MoveOut" OR action == "Rename")</string>
+				<key>SubInteractions</key>
+				<array>
+					<dict>
+						<key>ActivationRule</key>
+						<string>sourceItemsCount == 1</string>
+						<key>Alert</key>
+						<dict>
+							<key>LocalizedRecoveryOptions</key>
+							<dict>
+								<key>Cancel</key>
+								<string>ITEM_IN_USE_CANCEL</string>
+							</dict>
+							<key>LocalizedTitle</key>
+							<string>ITEM_IN_USE_TITLE</string>
+							<key>LocalizedSubTitle</key>
+							<dict>
+								<key>NSStringFormat</key>
+								<string>ITEM_IN_USE_SUBTITLE</string>
+								<key>NSStringFormatValues</key>
+								<array>
+									<string>firstMatchingItem.userInfo.inUse</string>
+								</array>
+							</dict>
+						</dict>
+					</dict>
+					<dict>
+						<key>ActivationRule</key>
+						<string>sourceItemsCount &gt; 1</string>
+						<key>Alert</key>
+						<dict>
+							<key>LocalizedRecoveryOptions</key>
+							<dict>
+								<key>Cancel</key>
+								<string>ITEM_IN_USE_CANCEL</string>
+							</dict>
+							<key>LocalizedTitle</key>
+							<string>ITEM_IN_USE_TITLE_MULTIPLE</string>
+							<key>LocalizedSubTitle</key>
+							<string>ITEM_IN_USE_SUBTITLE_MULTIPLE</string>
+						</dict>
+					</dict>
+				</array>
+			</dict>
+		</array>
+	</dict>
+</dict>
+</plist>

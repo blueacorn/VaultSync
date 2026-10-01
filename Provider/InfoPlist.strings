@@ -1,0 +1,10 @@
+/// Localized strings for the Provider extension's Info.plist user interactions.
+//
+//  Copyright (c) 2024 Apple Inc.
+//  SPDX-License-Identifier: MIT
+//
+"ITEM_IN_USE_TITLE" = "Item in use";
+"ITEM_IN_USE_TITLE_MULTIPLE" = "Items in use";
+"ITEM_IN_USE_SUBTITLE" = "This item is in use by %@ and may be open for editing. Continue anyway?";
+"ITEM_IN_USE_SUBTITLE_MULTIPLE" = "One or more of these items are in use by another user and may be open for editing. Continue anyway?";
+"ITEM_IN_USE_CANCEL" = "Cancel";

@@ -1,0 +1,9 @@
+{
+  "$schema": "https://raw.githubusercontent.com/swiftlang/sourcekit-lsp/refs/heads/release/6.2/config.schema.json",
+  "defaultWorkspaceType": "buildServer",
+  "backgroundIndexing": true,
+  "backgroundPreparationMode": "enabled",
+  "logging": {
+    "level": "info"
+  }
+}

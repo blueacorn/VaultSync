@@ -1,0 +1,10 @@
+//
+// Local.xcconfig.template
+//
+// Copy to Local.xcconfig (gitignored) for per-developer overrides of Application.xcconfig.
+// Uncomment and set any value to override the shared default.
+//
+
+// DEVELOPMENT_TEAM =
+// BUNDLE_ID_PREFIX =
+// MSGRAPH_CLIENT_ID =
