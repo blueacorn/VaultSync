@@ -7,7 +7,7 @@
 #      restricted to PUBLISH_PATHS) into PUBLIC_DIR, replacing its tracked content.
 #   3. Commits in PUBLIC_DIR; optionally pushes main to origin.
 #
-# Usage: tools/publish.sh [-m|--message "<msg>"] [-p|--publish]
+# Usage: tools/publish.sh -m|--message "<msg>" [-p|--publish]
 
 set -euo pipefail
 
@@ -19,7 +19,7 @@ PUBLISH_PATHS=()
 message=""
 publish=0
 
-usage() { echo "usage: $0 [-m|--message \"<msg>\"] [-p|--publish]" >&2; exit 2; }
+usage() { echo "usage: $0 -m|--message \"<msg>\" [-p|--publish]" >&2; exit 2; }
 
 while [[ $# -gt 0 ]]; do
     case "$1" in
@@ -29,6 +29,8 @@ while [[ $# -gt 0 ]]; do
         *)            usage ;;
     esac
 done
+
+[[ -n "$message" ]] || usage
 
 src_root="$(git rev-parse --show-toplevel)"
 cd "$src_root"
@@ -68,8 +70,8 @@ git add -A
 if git diff --cached --quiet; then
     echo "no changes to commit"
 else
-    git commit -q -m "${message:-Publish $tag}" -m "Source: $tag (${head_sha:0:10})"
-    echo "committed: $(git rev-parse --short HEAD)"
+    git commit -q -m "$message"
+    echo "committed: $(git rev-parse --short HEAD) $message"
 fi
 
 if [[ $publish -eq 1 ]]; then
